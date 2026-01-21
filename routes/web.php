@@ -1,44 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\ProductoController;
+use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\EditProductoController;
+use App\Http\Controllers\Web\ShowProductoController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/productos', function () {
-    return "esto es una prueba";
-
-})->name('productos.index');
-
-//obtener producto por id
-Route::get('/prodcutos/{id}', function ($id) {
-    return "esto es una prueba" . $id;
-
-})->name('productos.show');
-
-//mostrar formulario para crear producto
-Route::get('/productos/create', function () {
-    return "esto es una prueba";
-
-})->name('productos.create');
-
-//crear producto
-Route::post('/productos',function(){
-    return "esto es una prueba";
-})->name('productos.store');
-
-//muestre el fomulario para editar un producto
-Route::get('/productos/{id}/edit',function($id){
-    return "esto es una prueba" . $id;
-})->name('productos.edit');
-
-//actualizar un producto
-Route::put('/productos/{id}',function($id){
-    return "esto es una prueba" . $id;
-})->name('productos.update');
-
-//eliminar un producto
-Route::delete('/productos/{id}',function($id){
-    return "esto es una prueba" . $id;
-})->name('productos.destroy');
+// CRUD Productos usando Controller
+Route::get('/productos', [HomeController::class, 'index'])->name('productos.index');
+Route::get('/productos/create', [ProductoController::class, 'create'])->name('productos.create');
+Route::get('/productos/edit', [EditProductoController::class, 'edit'])->name('productos.edit');
+Route::get('/productos/show', [ShowProductoController::class, 'show'])->name('productos.show');
