@@ -34,10 +34,7 @@ class ProductoController extends Controller
     // Muestra la lista de productos con paginación
     public function index()
     {
-        // Recuperamos los productos de 2 en 2 (paginados)
         $productos = Producto::paginate(2);
-
-        // Retornamos la vista 'index' pasando la variable $productos
         return view('productos.index', compact('productos'));
     }
 
