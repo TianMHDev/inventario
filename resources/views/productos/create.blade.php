@@ -19,10 +19,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('productos.show') }}">Buscar Producto</a>
+                        <a class="nav-link" href="{{ route('productos.index') }}">Lista de Productos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('productos.create') }}">Agregar Producto</a>
+                        <a class="nav-link active" href="{{ route('productos.create') }}">Agregar Producto</a>
                     </li>
                 </ul>
             </div>
@@ -37,7 +37,9 @@
                         <h3 class="mb-0">Agregar Nuevo Producto</h3>
                     </div>
                     <div class="card-body">
-                        <form action="#" method="POST">
+                        {{-- El atributo action define a qué URL enviar los datos --}}
+                        <form action="{{ route('productos.store') }}" method="POST">
+                            {{-- @csrf es OBLIGATORIO para seguridad contra ataques Cross-Site Request Forgery --}}
                             @csrf
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre del Producto</label>

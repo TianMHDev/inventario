@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('productos.show') }}">Buscar Producto</a>
+                        <a class="nav-link" href="{{ route('productos.index') }}">Lista de Productos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('productos.create') }}">Agregar Producto</a>
@@ -31,57 +31,44 @@
 
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-10">
-                <!-- Card de Búsqueda -->
-                <div class="card shadow mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0">Buscar Producto por ID</h3>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('productos.show') }}" method="GET" class="row g-3">
-                            <div class="col-md-8">
-                                <input type="number" name="id" class="form-control"
-                                    placeholder="Ingrese el ID del producto (ej: 1)" required>
-                            </div>
-                            <div class="col-md-4 d-grid">
-                                <button type="submit" class="btn btn-primary">Buscar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Card de Resultados (Datos Quemados) -->
+            <div class="col-md-8">
                 <div class="card shadow">
-                    <div class="card-header bg-secondary text-white">
-                        <h4 class="mb-0">Resultado de la Búsqueda</h4>
+                    <div class="card-header bg-info text-white">
+                        <h3 class="mb-0">Detalles del Producto</h3>
                     </div>
                     <div class="card-body">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Precio</th>
-                                    <th scope="col">Stock</th>
-                                    <th scope="col" class="text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dato quemado para ejemplo -->
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Celular</td>
-                                    <td>$1,000</td>
-                                    <td>10</td>
-                                    <td class="text-center">
-                                        <a href="{{ route('productos.edit') }}"
-                                            class="btn btn-warning btn-sm">Editar</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="mt-3">
-                            <a href="{{ route('productos.index') }}" class="btn btn-outline-light">Volver a la lista</a>
+                        <div class="row mb-3">
+                            {{-- Mostramos los datos directamente desde el objeto $producto que envió el controlador
+                            --}}
+                            <div class="col-sm-4 fw-bold">ID:</div>
+                            <div class="col-sm-8">{{ $producto->id }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Nombre:</div>
+                            <div class="col-sm-8">{{ $producto->nombre }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Precio:</div>
+                            <div class="col-sm-8">${{ number_format($producto->precio, 2) }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Stock:</div>
+                            <div class="col-sm-8">{{ $producto->stock }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Creado el:</div>
+                            {{-- Formateamos las fechas de creación y actualización para que sean legibles --}}
+                            <div class="col-sm-8">{{ $producto->created_at->format('d/m/Y H:i') }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Última actualización:</div>
+                            <div class="col-sm-8">{{ $producto->updated_at->format('d/m/Y H:i') }}</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ route('productos.index') }}" class="btn btn-outline-light">Volver</a>
+                            <a href="{{ route('productos.edit', $producto->id) }}"
+                                class="btn btn-warning px-4 fw-bold">Editar</a>
                         </div>
                     </div>
                 </div>

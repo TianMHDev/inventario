@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('productos.show') }}">Buscar Producto</a>
+                        <a class="nav-link" href="{{ route('productos.index') }}">Lista de Productos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('productos.create') }}">Agregar Producto</a>
@@ -37,14 +37,16 @@
                         <h3 class="mb-0">Editar Producto</h3>
                     </div>
                     <div class="card-body">
-                        <!-- Usando datos quemados para la demostración visual -->
-                        <form action="#" method="POST">
+                        {{-- Para actualizar pasamos el ID del producto --}}
+                        <form action="{{ route('productos.update', $producto->id) }}" method="POST">
                             @csrf
-                            <input type="hidden" name="_method" value="PUT">
+                            {{-- HTML solo permite GET y POST. @method('PUT') le dice a Laravel que trate esto como un PUT --}}
+                            @method('PUT')
 
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre del Producto</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="Celular"
+                                {{-- Usamos {{ $producto->nombre }} para rellenar el campo con el valor actual --}}
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ $producto->nombre }}"
                                     required>
                             </div>
                             <div class="mb-3">
@@ -52,12 +54,12 @@
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
                                     <input type="number" step="0.01" class="form-control" id="precio" name="precio"
-                                        value="1000.00" required>
+                                        value="{{ $producto->precio }}" required>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="stock" class="form-label">Stock</label>
-                                <input type="number" class="form-control" id="stock" name="stock" value="10" required>
+                                <input type="number" class="form-control" id="stock" name="stock" value="{{ $producto->stock }}" required>
                             </div>
 
                             <div class="d-flex justify-content-between mt-4">
