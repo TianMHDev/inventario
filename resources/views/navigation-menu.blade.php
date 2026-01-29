@@ -81,16 +81,31 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                                {{-- FLUJO: Si el usuario tiene foto de perfil activa --}}
                                 <button
-                                    class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 dark:focus:border-indigo-500 transition">
-                                    <img class="size-8 rounded-full object-cover"
+                                    class="flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 dark:focus:border-indigo-500 transition">
+                                    <div class="flex flex-col items-end mr-3">
+                                        <span class="text-xs font-bold text-white">{{ Auth::user()->name }}</span>
+                                        <span
+                                            class="text-[10px] uppercase tracking-widest {{ Auth::user()->role === 'admin' ? 'text-indigo-400' : 'text-emerald-400' }} font-black">
+                                            {{ Auth::user()->role }}
+                                        </span>
+                                    </div>
+                                    <img class="size-8 rounded-full object-cover shadow-lg border border-white/10"
                                         src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                 </button>
                             @else
+                                {{-- FLUJO: Si el usuario NO tiene foto, mostramos solo texto --}}
                                 <span class="inline-flex rounded-md">
                                     <button type="button"
                                         class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none transition ease-in-out duration-150">
-                                        {{ Auth::user()->name }}
+                                        <div class="flex flex-col items-end mr-2">
+                                            <span class="text-xs font-bold text-white">{{ Auth::user()->name }}</span>
+                                            <span
+                                                class="text-[10px] uppercase tracking-widest {{ Auth::user()->role === 'admin' ? 'text-indigo-400' : 'text-emerald-400' }} font-black">
+                                                {{ Auth::user()->role }}
+                                            </span>
+                                        </div>
 
                                         <svg class="ms-2 -me-0.5 size-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

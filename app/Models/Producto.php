@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
 {
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     /*
      |--------------------------------------------------------------------------
      | GLOBAL VARIABLES
@@ -24,6 +28,7 @@ class Producto extends Model
         'nombre',
         'precio',
         'stock',
+        'user_id',
     ];
 
     // Conversión automática de tipos de datos al recuperar de la BD
