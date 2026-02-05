@@ -12,7 +12,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Mensajes de éxito con diseño moderno --}}
             @if(session('success'))
                 <div class="mb-6 flex items-center p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl shadow-lg shadow-emerald-500/5 animate-fade-in"
                     role="alert">

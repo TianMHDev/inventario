@@ -5,9 +5,16 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use App\Services\ProductoService;
 
 class ProductoController extends Controller
 {
+    protected $productoService;
+
+    public function __construct(ProductoService $productoService)
+    {
+        $this->productoService = $productoService;
+    }
     // Muestra el formulario para crear un nuevo producto
     public function create()
     {
@@ -29,12 +36,7 @@ class ProductoController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
-        // FLUJO: Asignamos manualmente el 'user_id' para saber quién creó el producto
-        $validated['user_id'] = auth()->id();
-
-        // Guardado masivo usando solo los datos validados
-        Producto::create($validated);
-
+        $this->productoService->crearProducto($validated);
         return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
     }
 
@@ -43,25 +45,14 @@ class ProductoController extends Controller
     {
         // Verifica permiso de ver la lista
         $this->authorize('viewAny', Producto::class);
-
-        $query = Producto::query();
-
-        // FLUJO: Si NO es admin, solo cargamos los productos que le pertenecen
-        if (auth()->user()->role !== 'admin') {
-            $query->where('user_id', auth()->id());
-        }
-
-        // Paginación para que la vista no se sature
-        $productos = $query->paginate(2);
-
+        $productos = $this->productoService->obtenerProductosPorUsuario();
         return view('productos.index', compact('productos'));
     }
 
     // DETALLE: Muestra un solo producto si el usuario es dueño o admin
     public function show($id)
     {
-        $producto = Producto::findOrFail($id);
-
+        $producto = $this->productoService->obtenerProductoPorId($id);
         // La Policy decide si puedes ver este registro específico
         $this->authorize('view', $producto);
 
@@ -71,7 +62,7 @@ class ProductoController extends Controller
     // EDICIÓN: Solo el dueño o el admin pueden ver el formulario de edición
     public function edit($id)
     {
-        $producto = Producto::findOrFail($id);
+        $producto = $this->productoService->obtenerProductoPorId($id);
 
         $this->authorize('update', $producto);
 
@@ -81,7 +72,7 @@ class ProductoController extends Controller
     // ACTUALIZACIÓN: Aplica cambios validando permisos de nuevo
     public function update(Request $request, $id)
     {
-        $producto = Producto::findOrFail($id);
+        $producto = $this->productoService->obtenerProductoPorId($id);
 
         $this->authorize('update', $producto);
 
@@ -91,7 +82,7 @@ class ProductoController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
-        $producto->update($validated);
+        $this->productoService->actualizarProducto($id, $validated);
 
         return redirect()->route('productos.index')->with('success', 'Producto actualizado exitosamente.');
     }
@@ -99,11 +90,11 @@ class ProductoController extends Controller
     // ELIMINACIÓN: Solo autorizados pueden borrar registros
     public function destroy($id)
     {
-        $producto = Producto::findOrFail($id);
+        $producto = $this->productoService->obtenerProductoPorId($id);
 
         $this->authorize('delete', $producto);
 
-        $producto->delete();
+        $this->productoService->eliminarProducto($id);
 
         return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente.');
     }

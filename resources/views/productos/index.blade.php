@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-2xl text-white leading-tight tracking-tight">
-                {{ __('Gestión de Inventario') }}
+                {{ __('Dashboard de Inventario') }}
             </h2>
             <div class="flex items-center space-x-2 text-sm text-gray-400">
                 <span>{{ now()->format('d M, Y') }}</span>
@@ -12,7 +12,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Mensajes de éxito con diseño moderno --}}
             @if(session('success'))
                 <div class="mb-6 flex items-center p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl shadow-lg shadow-emerald-500/5 animate-fade-in"
                     role="alert">
@@ -29,8 +28,8 @@
                 class="bg-gray-900/50 backdrop-blur-xl border border-white/5 overflow-hidden shadow-2xl sm:rounded-3xl p-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                     <div>
-                        <h3 class="text-xl font-bold text-white mb-1">Productos Disponibles</h3>
-                        <p class="text-gray-400 text-sm">Administra el stock y detalles de tus productos.</p>
+                        <h3 class="text-xl font-bold text-white mb-1">Productos Registrados</h3>
+                        <p class="text-gray-400 text-sm">Gestiona y visualiza tu inventario en tiempo real.</p>
                     </div>
                     <a href="{{ route('productos.create') }}"
                         class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white transition-all duration-200 bg-indigo-600 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20">

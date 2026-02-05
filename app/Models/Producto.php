@@ -10,6 +10,11 @@ class Producto extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
     /*
      |--------------------------------------------------------------------------
      | GLOBAL VARIABLES
@@ -29,6 +34,7 @@ class Producto extends Model
         'precio',
         'stock',
         'user_id',
+        'categoria_id',
     ];
 
     // Conversión automática de tipos de datos al recuperar de la BD
