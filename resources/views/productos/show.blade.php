@@ -18,48 +18,59 @@
             <div
                 class="bg-gray-900/50 backdrop-blur-xl border border-white/5 overflow-hidden shadow-2xl sm:rounded-3xl p-8 md:p-12">
                 <div class="space-y-8">
-                    <div
-                        class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-8">
-                        <div>
-                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-[0.2em]">Producto
-                                #{{ $producto->id }}</span>
-                            <h3 class="text-3xl font-black text-white mt-1 uppercase">{{ $producto->nombre }}</h3>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block">Precio
-                                Actual</span>
-                            <span
-                                class="text-4xl font-black text-emerald-400">${{ number_format($producto->precio, 2) }}</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="bg-gray-950/40 rounded-2xl p-6 border border-white/5">
-                            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Stock
-                                Disponible</span>
-                            <div class="flex items-baseline space-x-2">
-                                <span class="text-3xl font-bold text-white">{{ $producto->stock }}</span>
-                                <span class="text-sm text-gray-400">unidades</span>
-                            </div>
-                            <div class="mt-4 h-2 w-full bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full {{ $producto->stock < 10 ? 'bg-orange-500' : 'bg-indigo-500' }}"
-                                    style="width: {{ min(($producto->stock / 100) * 100, 100) }}%"></div>
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <!-- Imagen del Producto -->
+                        <div class="w-full md:w-1/3">
+                            <div class="relative group">
+                                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                                <div class="relative bg-gray-950 rounded-3xl overflow-hidden border border-white/10 aspect-square flex items-center justify-center">
+                                    @if($producto->imagen)
+                                        <img src="{{ asset('storage/' . $producto->imagen) }}" alt="{{ $producto->nombre }}" class="w-full h-full object-cover">
+                                    @else
+                                        <svg class="w-16 h-16 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    @endif
+                                </div>
                             </div>
                         </div>
 
-                        <div class="bg-gray-950/40 rounded-2xl p-6 border border-white/5 space-y-4">
-                            <div>
-                                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Fecha
-                                    de Registro</span>
-                                <span
-                                    class="text-sm font-medium text-gray-300">{{ $producto->created_at->format('d M, Y - H:i') }}</span>
+                        <!-- Información Principal -->
+                        <div class="w-full md:w-2/3 space-y-6">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
+                                <div>
+                                    <span class="px-2 py-1 text-[10px] font-bold text-indigo-400 bg-indigo-400/10 border border-indigo-400/20 rounded-md uppercase tracking-widest">
+                                        {{ $producto->categoria->nombre ?? 'Sin Categoría' }}
+                                    </span>
+                                    <h3 class="text-4xl font-black text-white mt-2 uppercase tracking-tight">{{ $producto->nombre }}</h3>
+                                </div>
+                                <div class="text-left md:text-right">
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block">Precio</span>
+                                    <span class="text-4xl font-black text-emerald-400">${{ number_format($producto->precio, 2) }}</span>
+                                </div>
                             </div>
-                            <div>
-                                <span
-                                    class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Última
-                                    Modificación</span>
-                                <span
-                                    class="text-sm font-medium text-gray-300">{{ $producto->updated_at->format('d M, Y - H:i') }}</span>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-950/40 rounded-2xl p-4 border border-white/5">
+                                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-1">Stock</span>
+                                    <div class="flex items-baseline space-x-2">
+                                        <span class="text-2xl font-bold text-white">{{ $producto->stock }}</span>
+                                        <span class="text-xs text-gray-500 uppercase font-black">unid.</span>
+                                    </div>
+                                    <div class="mt-2 h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                        <div class="h-full {{ $producto->stock < 10 ? 'bg-orange-500' : 'bg-indigo-500' }}"
+                                            style="width: {{ min(($producto->stock / 100) * 100, 100) }}%"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-950/40 rounded-2xl p-4 border border-white/5">
+                                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-1">ID</span>
+                                    <span class="text-xl font-mono text-indigo-400 font-bold">#{{ str_pad($producto->id, 5, '0', STR_PAD_LEFT) }}</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest italic">
+                                <div>Registro: {{ $producto->created_at->format('d/m/Y H:i') }}</div>
+                                <div>Actualizado: {{ $producto->updated_at->format('d/m/Y H:i') }}</div>
                             </div>
                         </div>
                     </div>

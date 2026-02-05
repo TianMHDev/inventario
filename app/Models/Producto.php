@@ -35,6 +35,7 @@ class Producto extends Model
         'stock',
         'user_id',
         'categoria_id',
+        'imagen',
     ];
 
     // Conversión automática de tipos de datos al recuperar de la BD

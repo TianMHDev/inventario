@@ -46,32 +46,46 @@
                     <table class="min-w-full divide-y divide-white/5">
                         <thead class="bg-white/[0.02]">
                             <tr>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                    ID</th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                    Nombre</th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                    Producto</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                    Categoría</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
                                     Precio</th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
                                     Stock</th>
-                                <th
-                                    class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">
                                     Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
                             @forelse($productos as $producto)
-                                <tr class="hover:bg-white/[0.02] transition-colors duration-150">
+                                <tr class="hover:bg-white/[0.02] transition-colors duration-150 group">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="text-sm font-mono text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded-md">{{ $producto->id }}</span>
+                                        <div class="flex items-center space-x-4">
+                                            <!-- Miniatura de la Imagen -->
+                                            <div class="flex-shrink-0 w-12 h-12">
+                                                @if($producto->imagen)
+                                                    <img class="w-12 h-12 rounded-xl object-cover border border-white/10 shadow-lg group-hover:scale-110 transition-transform duration-200" 
+                                                        src="{{ asset('storage/' . $producto->imagen) }}" alt="{{ $producto->nombre }}">
+                                                @else
+                                                    <div class="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center border border-white/5">
+                                                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <div class="text-sm font-semibold text-white tracking-tight">{{ $producto->nombre }}</div>
+                                                <div class="text-[10px] font-mono text-gray-500 uppercase">ID: {{ $producto->id }}</div>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-semibold text-white">{{ $producto->nombre }}</div>
+                                        <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                            {{ $producto->categoria->nombre ?? 'Sin Categoría' }}
+                                        </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-bold text-emerald-400">
@@ -79,8 +93,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <span
-                                                class="text-sm {{ $producto->stock < 10 ? 'text-orange-400' : 'text-gray-300' }} font-medium">
+                                            <span class="text-sm {{ $producto->stock < 10 ? 'text-orange-400 font-bold' : 'text-gray-300' }}">
                                                 {{ $producto->stock }}
                                             </span>
                                             @if($producto->stock < 10)
@@ -91,23 +104,18 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="flex justify-center items-center space-x-3">
                                             <a href="{{ route('productos.show', $producto->id) }}"
-                                                class="flex items-center text-gray-400 hover:text-white transition-colors duration-200"
+                                                class="p-2 bg-gray-800/50 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-all duration-200"
                                                 title="Ver detalle">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                    </path>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                 </svg>
                                             </a>
                                             <a href="{{ route('productos.edit', $producto->id) }}"
-                                                class="flex items-center text-gray-400 hover:text-yellow-400 transition-colors duration-200"
+                                                class="p-2 bg-yellow-400/10 hover:bg-yellow-400/20 rounded-lg text-yellow-400 transition-all duration-200"
                                                 title="Editar">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                    </path>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>
                                             </a>
 
@@ -116,9 +124,9 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="flex items-center text-gray-400 hover:text-red-500 transition-colors duration-200"
+                                                    class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-500 transition-all duration-200"
                                                     title="Eliminar">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2"
