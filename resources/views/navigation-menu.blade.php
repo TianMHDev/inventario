@@ -13,9 +13,22 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
+                    <x-nav-link href="{{ route('productos.index') }}" :active="request()->routeIs('productos.*')"
                         class="dark:text-gray-300 dark:hover:text-white">
-                        {{ __('Dashboard') }}
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        {{ __('Productos') }}
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('categorias.index') }}" :active="request()->routeIs('categorias.*')"
+                        class="dark:text-gray-300 dark:hover:text-white">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                        </svg>
+                        {{ __('Categorías') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -168,8 +181,11 @@
     <div :class="{'block': open, 'hidden': ! open}"
         class="hidden sm:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-white/5">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link href="{{ route('productos.index') }}" :active="request()->routeIs('productos.*')">
+                {{ __('Productos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('categorias.index') }}" :active="request()->routeIs('categorias.*')">
+                {{ __('Categorías') }}
             </x-responsive-nav-link>
         </div>
 

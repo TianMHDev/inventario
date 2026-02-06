@@ -16,11 +16,18 @@ class ProductoController extends Controller
         $this->productoService = $productoService;
     }
     // Muestra el formulario para crear un nuevo producto
-    public function create()
+    public function create(Request $request)
     {
         // Verifica si el usuario tiene permiso para crear según la Policy
         $this->authorize('create', Producto::class);
-        return view('productos.create');
+
+        // Obtenemos todas las categorías para el select del formulario.
+        $categorias = \App\Models\Categoria::all();
+
+        // Si venimos de una categoría específica, la pre-seleccionamos.
+        $selected_categoria_id = $request->input('categoria_id');
+
+        return view('productos.create', compact('categorias', 'selected_categoria_id'));
     }
 
     // Guarda un nuevo producto asociado al usuario actual
@@ -29,24 +36,31 @@ class ProductoController extends Controller
         // Seguridad: Solo usuarios autorizados pueden entrar aquí
         $this->authorize('create', Producto::class);
 
-        // Validación: Aseguramos datos limpios y lógicos
+        // Validación: Aseguramos datos limpios y lógicos, incluyendo la imagen y categoría.
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'nombre'       => 'required|string|max:255',
+            'precio'       => 'required|numeric|min:0',
+            'stock'        => 'required|integer|min:0',
+            'categoria_id' => 'required|exists:categorias,id',
+            'imagen'       => 'nullable|image|max:2048',
         ]);
 
-        $this->productoService->crearProducto($validated);
-        return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
+        // Pasamos todo el request (que incluye el archivo de imagen) al servicio.
+        $this->productoService->crearProducto($request->all());
+
+        return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente con su categoría e imagen.');
     }
 
-    // LISTADO: Filtra productos según el rol del usuario
-    public function index()
+    // LISTADO: Filtra productos según el rol del usuario y términos de búsqueda
+    public function index(Request $request)
     {
         // Verifica permiso de ver la lista
         $this->authorize('viewAny', Producto::class);
-        $productos = $this->productoService->obtenerProductosPorUsuario();
-        return view('productos.index', compact('productos'));
+
+        $search = $request->input('search');
+        $productos = $this->productoService->obtenerProductosPorUsuario($search);
+
+        return view('productos.index', compact('productos', 'search'));
     }
 
     // DETALLE: Muestra un solo producto si el usuario es dueño o admin
@@ -63,37 +77,41 @@ class ProductoController extends Controller
     public function edit($id)
     {
         $producto = $this->productoService->obtenerProductoPorId($id);
-
         $this->authorize('update', $producto);
 
-        return view('productos.edit', compact('producto'));
+        // Cargamos categorías para que el usuario pueda cambiarla si desea.
+        $categorias = \App\Models\Categoria::all();
+
+        return view('productos.edit', compact('producto', 'categorias'));
     }
 
     // ACTUALIZACIÓN: Aplica cambios validando permisos de nuevo
     public function update(Request $request, $id)
     {
         $producto = $this->productoService->obtenerProductoPorId($id);
-
         $this->authorize('update', $producto);
 
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+        $request->validate([
+            'nombre'       => 'required|string|max:255',
+            'precio'       => 'required|numeric|min:0',
+            'stock'        => 'required|integer|min:0',
+            'categoria_id' => 'required|exists:categorias,id',
+            'imagen'       => 'nullable|image|max:2048',
         ]);
 
-        $this->productoService->actualizarProducto($id, $validated);
+        // El servicio se encarga de reemplazar la imagen si se subió una nueva.
+        $this->productoService->actualizarProducto($id, $request->all());
 
-        return redirect()->route('productos.index')->with('success', 'Producto actualizado exitosamente.');
+        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
     }
 
     // ELIMINACIÓN: Solo autorizados pueden borrar registros
     public function destroy($id)
     {
         $producto = $this->productoService->obtenerProductoPorId($id);
-
         $this->authorize('delete', $producto);
 
+        // El servicio también elimina el archivo físico de la imagen.
         $this->productoService->eliminarProducto($id);
 
         return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente.');

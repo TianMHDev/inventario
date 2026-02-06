@@ -18,13 +18,13 @@ Route::middleware([
 
     // Ruta para el Dashboard (Panel de Control)
     Route::get('/dashboard', function () {
-        // Obtiene los productos de la base de datos de forma paginada (2 por página)
-        $productos = Producto::paginate(2);
-        // Retorna la vista 'dashboard' pasando la lista de productos
-        return view('dashboard', compact('productos'));
+        // Redirigimos directamente al catálogo de productos para un flujo más natural
+        return redirect()->route('productos.index');
     })->name('dashboard');
 
-    // Genera automáticamente todas las rutas CRUD para productos (index, create, store, edit, etc.)
-    // vinculándolas con los métodos correspondientes en el ProductoController
+    // Rutas Web de Productos (CRUD completo)
     Route::resource('productos', ProductoController::class);
+
+    // Rutas Web de Categorías (Catálogo y gestión)
+    Route::resource('categorias', \App\Http\Controllers\Web\CategoriaController::class);
 });

@@ -34,16 +34,62 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="bg-gray-950/40 rounded-2xl p-6 border border-white/5">
-                            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Stock
-                                Disponible</span>
-                            <div class="flex items-baseline space-x-2">
-                                <span class="text-3xl font-bold text-white">{{ $producto->stock }}</span>
-                                <span class="text-sm text-gray-400">unidades</span>
+                        <!-- Visualización de la imagen del producto -->
+                        <div class="bg-gray-950/40 rounded-3xl p-2 border border-white/5 overflow-hidden group">
+                            @if($producto->imagen)
+                                <img src="{{ asset('storage/' . $producto->imagen) }}" alt="{{ $producto->nombre }}"
+                                    class="w-full h-64 object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105">
+                            @else
+                                <div
+                                    class="w-full h-64 flex flex-col items-center justify-center bg-gray-900 rounded-2xl text-gray-700">
+                                    <svg class="w-20 h-20 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    <span class="text-xs font-bold uppercase tracking-widest">Sin Imagen</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="bg-gray-950/40 rounded-2xl p-6 border border-white/5">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Stock
+                                    Disponible</span>
+                                <div class="flex items-baseline space-x-2">
+                                    <span class="text-3xl font-bold text-white">{{ $producto->stock }}</span>
+                                    <span class="text-sm text-gray-400">unidades</span>
+                                </div>
+                                <div class="mt-4 h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                                    <div class="h-full {{ $producto->stock < 10 ? 'bg-orange-500' : 'bg-indigo-500' }}"
+                                        style="width: {{ min(($producto->stock / 100) * 100, 100) }}%"></div>
+                                </div>
                             </div>
-                            <div class="mt-4 h-2 w-full bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full {{ $producto->stock < 10 ? 'bg-orange-500' : 'bg-indigo-500' }}"
-                                    style="width: {{ min(($producto->stock / 100) * 100, 100) }}%"></div>
+
+                            <div class="bg-gray-950/40 rounded-2xl p-6 border border-white/5">
+                                <span
+                                    class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Categoría</span>
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mt-1">
+                                    {{ $producto->categoria->nombre ?? 'Sin categoría' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-gray-950/40 rounded-2xl p-6 border border-white/5">
+                            <span
+                                class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Registrado
+                                Por</span>
+                            <div class="flex items-center mt-2">
+                                <div
+                                    class="h-8 w-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mr-3">
+                                    <span
+                                        class="text-xs font-bold text-emerald-400">{{ substr($producto->user->name ?? 'U', 0, 1) }}</span>
+                                </div>
+                                <span
+                                    class="text-sm font-medium text-gray-300">{{ $producto->user->name ?? 'Usuario Desconocido' }}</span>
                             </div>
                         </div>
 

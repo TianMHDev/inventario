@@ -21,9 +21,10 @@ Route::get('/user', function (Request $request) {
 // Todas las rutas dentro de este grupo requieren un token válido (Bearer Token).
 Route::middleware('auth:sanctum')->group(function () {
 
-    // apiResource crea automáticamente las rutas para CRUD (index, store, show, update, destroy).
-    // Ideal para APIs ya que omite las rutas de formularios visuales (create, edit).
-    Route::apiResource('productos', ProductoController::class);
+    // Agregamos el prefijo 'api.' a los nombres de las rutas para evitar colisiones con las rutas Web.
+    // Ej: route('api.productos.index') vs route('productos.index')
+    Route::apiResource('productos', ProductoController::class)->names('api.productos');
+    Route::apiResource('categorias', \App\Http\Controllers\Api\CategoriaController::class)->names('api.categorias');
 
     // Ruta para cerrar sesión: invalida el token actual del usuario.
     Route::post('/logout', [AuthController::class, 'logout']);

@@ -26,32 +26,51 @@
 
             <div
                 class="bg-gray-900/50 backdrop-blur-xl border border-white/5 overflow-hidden shadow-2xl sm:rounded-3xl p-8">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                     <div>
-                        <h3 class="text-xl font-bold text-white mb-1">Productos Registrados</h3>
-                        <p class="text-gray-400 text-sm">Gestiona y visualiza tu inventario en tiempo real.</p>
+                        <h3 class="text-xl font-black text-white uppercase tracking-tight mb-1">Inventario Global</h3>
+                        <p class="text-gray-400 text-sm font-medium">Gestiona tus productos con precisión quirúrgica.
+                        </p>
                     </div>
-                    <a href="{{ route('productos.create') }}"
-                        class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white transition-all duration-200 bg-indigo-600 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20">
-                        <svg class="w-5 h-5 mr-2 -ml-1 transition-transform group-hover:scale-110" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Nuevo Producto
-                    </a>
+
+                    <div class="flex flex-col sm:flex-row w-full md:w-auto gap-4">
+                        <!-- Barra de Búsqueda Profesional -->
+                        <form action="{{ route('productos.index') }}" method="GET" class="relative group">
+                            <input type="text" name="search" value="{{ $search ?? '' }}"
+                                placeholder="Buscar producto..."
+                                class="w-full sm:w-64 bg-white/5 border-white/10 focus:border-indigo-500 focus:ring-0 rounded-xl text-sm text-white placeholder-gray-500 py-3 pl-12 pr-4 transition-all duration-300 group-hover:bg-white/10">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-500 group-hover:text-indigo-400 transition-colors"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </form>
+
+                        <a href="{{ route('productos.create') }}"
+                            class="inline-flex items-center justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-widest rounded-xl transition-all duration-200 shadow-lg shadow-indigo-500/20 group">
+                            <svg class="w-5 h-5 mr-2 transition-transform group-hover:rotate-90" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Nuevo Registro
+                        </a>
+                    </div>
                 </div>
 
-                <div class="overflow-hidden bg-gray-950/30 rounded-2xl border border-white/5">
+                <!-- Contenedor con scroll horizontal para móviles -->
+                <div class="overflow-x-auto bg-gray-950/30 rounded-2xl border border-white/5">
                     <table class="min-w-full divide-y divide-white/5">
                         <thead class="bg-white/[0.02]">
                             <tr>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                    ID</th>
+                                    Producto</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                    Nombre</th>
+                                    Categoría</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">
                                     Precio</th>
@@ -67,11 +86,36 @@
                             @forelse($productos as $producto)
                                 <tr class="hover:bg-white/[0.02] transition-colors duration-150">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="text-sm font-mono text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded-md">{{ $producto->id }}</span>
+                                        <div class="flex items-center">
+                                            <!-- Miniatura de la imagen del producto -->
+                                            <div
+                                                class="h-12 w-12 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800 border border-white/5 mr-4 shadow-inner">
+                                                @if($producto->imagen)
+                                                    <img src="{{ asset('storage/' . $producto->imagen) }}"
+                                                        alt="{{ $producto->nombre }}" class="h-full w-full object-cover">
+                                                @else
+                                                    <div class="h-full w-full flex items-center justify-center text-gray-600">
+                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                            </path>
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-semibold text-white">{{ $producto->nombre }}</div>
+                                                <div class="text-xs text-gray-500 font-mono">ID: {{ $producto->id }}</div>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-semibold text-white">{{ $producto->nombre }}</div>
+                                        <!-- Nombre de la categoría limpio (sin el detalle del recuadro) -->
+                                        <span class="text-sm font-bold text-indigo-400">
+                                            {{ $producto->categoria->nombre ?? 'Sin categoría' }}
+                                        </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-bold text-emerald-400">
@@ -151,7 +195,7 @@
                 </div>
 
                 <div class="mt-8 pagination-dark">
-                    {{ $productos->links() }}
+                    {{ $productos->appends(['search' => $search])->links() }}
                 </div>
             </div>
         </div>

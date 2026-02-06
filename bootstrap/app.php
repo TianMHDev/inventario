@@ -12,9 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Habilitamos el middleware de Sanctum para que reconozca la sesión del navegador
+        // en las rutas de la API (/api/*). Esto evita el error 'Unauthenticated' si ya estás logueado en la web.
+        $middleware->statefulApi();
+
         // Configuramos el middleware para las peticiones de la API.
         $middleware->api(append: [
-            \Illuminate\Http\Middleware\HandleCors::class, // Habilitar CORS para que otros dominios puedan consultar la API
+            \Illuminate\Http\Middleware\HandleCors::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
