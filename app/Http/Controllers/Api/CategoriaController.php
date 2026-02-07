@@ -31,6 +31,8 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', \App\Models\Categoria::class);
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -47,6 +49,7 @@ class CategoriaController extends Controller
     public function show($id)
     {
         $categoria = $this->categoriaService->buscarPorId($id);
+        $this->authorize('view', $categoria);
         return $this->successResponse(new CategoriaResource($categoria), 'Categoría encontrada');
     }
 
@@ -55,6 +58,9 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $categoria = $this->categoriaService->buscarPorId($id);
+        $this->authorize('update', $categoria);
+
         $request->validate([
             'nombre' => 'sometimes|required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -70,6 +76,9 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
+        $categoria = $this->categoriaService->buscarPorId($id);
+        $this->authorize('delete', $categoria);
+
         $this->categoriaService->eliminar($id);
         return $this->successResponse(null, 'Categoría eliminada con éxito');
     }

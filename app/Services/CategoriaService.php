@@ -49,6 +49,9 @@ class CategoriaService
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($categoria->imagen);
             }
             $data['imagen'] = $data['imagen']->store('categorias', 'public');
+        } else {
+            // Si no se subió una nueva imagen, eliminamos la clave del array para no borrar la existente en la DB
+            unset($data['imagen']);
         }
 
         $categoria->update($data);

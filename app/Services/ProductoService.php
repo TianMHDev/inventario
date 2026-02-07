@@ -18,15 +18,10 @@ class ProductoService
         // Asignamos el usuario autenticado como dueño del producto.
         $data['user_id'] = Auth::id();
 
-<<<<<<< HEAD
         // Si se envió una imagen, la guardamos en el storage público.
         if (isset($data['imagen']) && $data['imagen'] instanceof \Illuminate\Http\UploadedFile) {
             $path = $data['imagen']->store('productos', 'public');
             $data['imagen'] = $path;
-=======
-        if (isset($data['imagen']) && $data['imagen'] instanceof \Illuminate\Http\UploadedFile) {
-            $data['imagen'] = $this->guardarImagen($data['imagen']);
->>>>>>> b449cff309aa0bf8b7ef4d90a1f3473f742715fb
         }
 
         return Producto::create($data);
@@ -40,50 +35,50 @@ class ProductoService
         $user = Auth::user();
         $query = Producto::with('categoria');
 
-<<<<<<< HEAD
         // Filtro de búsqueda por nombre si se proporciona
         if ($search) {
             $query->where('nombre', 'like', "%{$search}%");
         }
 
         if ($user->role === 'admin') {
-            return $query->latest()->paginate(10);
+            return $query->latest()->paginate(5);
         }
 
-        return $query->where('user_id', $user->id)->latest()->paginate(10);
+        return $query->where('user_id', $user->id)->latest()->paginate(5);
     }
 
     /**
      * Busca un producto por ID o falla si no existe.
      */
-=======
-        // Cargamos la relación de categoría para mostrarla en el listado
+    public function obtenerProductos(?string $search = null)
+        {
+        $user = Auth::user();
         $query = Producto::with('categoria');
 
-        if ($user->role === 'admin') {
-            return $query->paginate(10);
+        // Filtro de búsqueda por nombre si se proporciona
+        if ($search) {
+            $query->where('nombre', 'like', "%{$search}%");
         }
 
-        return $query->where('user_id', $user->id)->paginate(10);
+        if ($user->role === 'admin') {
+            return $query->paginate(5);
+        }
+
+        return $query->where('user_id', $user->id)->paginate(5);
     }
 
->>>>>>> b449cff309aa0bf8b7ef4d90a1f3473f742715fb
     public function obtenerProductoPorId(int $id)
     {
         return Producto::with('categoria')->findOrFail($id);
     }
 
-<<<<<<< HEAD
     /**
      * Actualiza un producto existente, manejando el reemplazo de la imagen.
      */
-=======
->>>>>>> b449cff309aa0bf8b7ef4d90a1f3473f742715fb
     public function actualizarProducto(int $id, array $data)
     {
         $producto = Producto::findOrFail($id);
 
-<<<<<<< HEAD
         // Si se sube una nueva imagen, reemplazamos la anterior.
         if (isset($data['imagen']) && $data['imagen'] instanceof \Illuminate\Http\UploadedFile) {
             // Eliminamos la imagen antigua si existe.
@@ -93,21 +88,19 @@ class ProductoService
             // Guardamos la nueva imagen.
             $path = $data['imagen']->store('productos', 'public');
             $data['imagen'] = $path;
-=======
+            }
         if (isset($data['imagen']) && $data['imagen'] instanceof \Illuminate\Http\UploadedFile) {
             // Opcional: Eliminar imagen anterior si existe
             if ($producto->imagen) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($producto->imagen);
             }
             $data['imagen'] = $this->guardarImagen($data['imagen']);
->>>>>>> b449cff309aa0bf8b7ef4d90a1f3473f742715fb
         }
 
         $producto->update($data);
         return $producto;
     }
 
-<<<<<<< HEAD
     /**
      * Elimina un producto y su imagen asociada.
      */
@@ -120,15 +113,7 @@ class ProductoService
             \Illuminate\Support\Facades\Storage::disk('public')->delete($producto->imagen);
         }
 
-=======
-    public function eliminarProducto(int $id)
-    {
-        $producto = Producto::findOrFail($id);
-        if ($producto->imagen) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($producto->imagen);
-        }
->>>>>>> b449cff309aa0bf8b7ef4d90a1f3473f742715fb
-        $producto->delete();
+            $producto->delete();
         return $producto;
     }
 

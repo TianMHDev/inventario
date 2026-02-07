@@ -33,16 +33,13 @@ class CategoriaController extends Controller
 
     public function create()
     {
-        // Solo administradores pueden crear categorías según el diseño previo.
-        if (auth()->user()->role !== 'admin') {
-            return redirect()->route('categorias.index')->with('error', 'No tienes permisos.');
-        }
+        $this->authorize('create', \App\Models\Categoria::class);
         return view('categorias.create');
     }
 
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'admin') abort(403);
+        $this->authorize('create', \App\Models\Categoria::class);
 
         $request->validate([
             'nombre' => 'required|string|max:255',
@@ -57,14 +54,15 @@ class CategoriaController extends Controller
 
     public function edit($id)
     {
-        if (auth()->user()->role !== 'admin') abort(403);
         $categoria = $this->categoriaService->buscarPorId($id);
+        $this->authorize('update', $categoria);
         return view('categorias.edit', compact('categoria'));
     }
 
     public function update(Request $request, $id)
     {
-        if (auth()->user()->role !== 'admin') abort(403);
+        $categoria = $this->categoriaService->buscarPorId($id);
+        $this->authorize('update', $categoria);
 
         $request->validate([
             'nombre' => 'required|string|max:255',
@@ -79,7 +77,8 @@ class CategoriaController extends Controller
 
     public function destroy($id)
     {
-        if (auth()->user()->role !== 'admin') abort(403);
+        $categoria = $this->categoriaService->buscarPorId($id);
+        $this->authorize('delete', $categoria);
 
         $this->categoriaService->eliminar($id);
 
